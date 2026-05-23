@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+# Check for bucket name
+if [ -z "$1" ]; then
+    echo "Provide a bucket name. e.g. /bucket my-bucket-name"
+    exit i
+fi
+
+aws s3api create-bucket --bucket $1 \
+--query Location \
+--output text

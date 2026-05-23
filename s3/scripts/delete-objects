@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+set -e
+
+if [ -z "$1" ]; then
+    echo "Provide a bucket name. e.g. /bucket my-bucket-name"
+    exit 1
+fi
+
+DELETE_JSON=$(
+  aws s3api list-objects-v2 \
+    --bucket "$1" \
+    --query "Contents[].Key" \
+    --output json \
+  | jq '{Objects: [.[] | {Key: .}]}'
+)
+
+aws s3api delete-objects \
+  --bucket "$1" \
+  --delete "$DELETE_JSON"
